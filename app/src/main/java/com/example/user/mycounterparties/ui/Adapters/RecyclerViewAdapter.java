@@ -20,6 +20,7 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private List<CounterpartiesItem> items;
+    private Listner listner;
 
     public RecyclerViewAdapter(List<CounterpartiesItem> items) {
         this.items = items;
@@ -33,9 +34,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
-
-        holder.name.setText(items.get(position).getName());
-        holder.address.setText(items.get(position).getAddress());
+        CounterpartiesItem counterpartiesItem = items.get(position);
+        holder.bindCounterparties(counterpartiesItem);
 
     }
 
@@ -44,19 +44,41 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return items.size();
     }
 
+    public void setListner(Listner listner) {
+        this.listner = listner;
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
         private TextView name;
         private TextView address;
+        private CounterpartiesItem counterpartiesItem;
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listner.onClick(counterpartiesItem.getName() + "," +  counterpartiesItem.getAddress());
+                }
+            });
 
             cardView = itemView.findViewById(R.id.cv);
             name = itemView.findViewById(R.id.name);
             address = itemView.findViewById(R.id.address);
         }
+
+        void bindCounterparties(CounterpartiesItem counterpartiesItem){
+            this.counterpartiesItem = counterpartiesItem;
+            name.setText(counterpartiesItem.getName());
+            address.setText(counterpartiesItem.getAddress());
+        }
+    }
+
+    public interface Listner{
+        void onClick(String nameAndAddress);
     }
 }
 

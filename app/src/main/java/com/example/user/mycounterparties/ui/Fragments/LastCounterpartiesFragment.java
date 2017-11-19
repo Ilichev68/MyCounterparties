@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.realm.Counterparties;
+import com.example.user.mycounterparties.ui.Activity.CounterpartiyActivity;
 import com.example.user.mycounterparties.ui.Adapters.RecyclerViewAdapter;
 import com.example.user.mycounterparties.ui.CounterpartiesItem;
 
@@ -24,7 +25,7 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LastCounterpartiesFragment extends Fragment {
+public class LastCounterpartiesFragment extends Fragment implements RecyclerViewAdapter.Listner {
 
 
     private RecyclerView recyclerView;
@@ -32,7 +33,6 @@ public class LastCounterpartiesFragment extends Fragment {
 
 
     public LastCounterpartiesFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -56,11 +56,12 @@ public class LastCounterpartiesFragment extends Fragment {
     private void update() {
         List<CounterpartiesItem> list = getAllLastCounterparties();
         adapter = new RecyclerViewAdapter(list);
+        adapter.setListner(this);
         recyclerView.setAdapter(adapter);
     }
 
     public List<CounterpartiesItem> getAllLastCounterparties() {
-        
+
         List<CounterpartiesItem> counterpartiesItems = new ArrayList<>();
 
         Realm realm = Realm.getDefaultInstance();
@@ -83,4 +84,8 @@ public class LastCounterpartiesFragment extends Fragment {
         return counterpartiesItems;
     }
 
+    @Override
+    public void onClick(String nameAndAddress) {
+        CounterpartiyActivity.start(getActivity(), nameAndAddress);
+    }
 }
