@@ -18,6 +18,7 @@ public class CounterpartiyActivity extends AppCompatActivity {
     private TextView address;
     private TextView managementName;
     private TextView managementPost;
+    private TextView inn;
 
     public static void start(Context context, String text) {
         Intent starter = new Intent(context, CounterpartiyActivity.class);
@@ -37,6 +38,7 @@ public class CounterpartiyActivity extends AppCompatActivity {
         address = findViewById(R.id.address);
         managementName = findViewById(R.id.managements_name);
         managementPost = findViewById(R.id.managements_post);
+        inn = findViewById(R.id.inn);
 
         addText();
 
@@ -68,6 +70,7 @@ public class CounterpartiyActivity extends AppCompatActivity {
                     address.setText(data.getAddress());
                     managementName.setText(data.getName());
                     managementPost.setText(data.getPost());
+                    inn.setText(data.getInn());
 
                 } finally {
                     realm.close();

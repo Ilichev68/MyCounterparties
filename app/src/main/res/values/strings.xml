@@ -7,4 +7,5 @@
     <string name="type">Тип организации:</string>
     <string name="head">Руководитель:</string>
     <string name="address">Адрес:</string>
+    <string name="inn">ИНН:</string>
 </resources>

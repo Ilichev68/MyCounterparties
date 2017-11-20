@@ -68,9 +68,18 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
         Realm realm = Realm.getDefaultInstance();
 
         try {
-            RealmResults<Counterparties> answer = realm.where(Counterparties.class).equalTo("isLast", "yes").findAllSorted("whenAdd");
+            RealmResults<Counterparties> answerWithoutFavorite = realm.where(Counterparties.class).equalTo("isFavorite", true).equalTo("isLast", "yes").findAllSorted("whenAdd");
+            RealmResults<Counterparties> answerWithFavorite = realm.where(Counterparties.class).equalTo("isLast", "yes").equalTo("isFavorite", false).findAllSorted("whenAdd");
 
-            for (Counterparties counterparties : answer) {
+            for (Counterparties counterparties : answerWithFavorite) {
+                CounterpartiesItem item = new CounterpartiesItem();
+                item.setName(counterparties.getValue());
+                item.setAddress(counterparties.getAddress());
+                item.setFavorite(counterparties.getIsFavorite());
+                counterpartiesItems.add(item);
+            }
+
+            for (Counterparties counterparties : answerWithoutFavorite) {
                 CounterpartiesItem item = new CounterpartiesItem();
                 item.setName(counterparties.getValue());
                 item.setAddress(counterparties.getAddress());
@@ -94,15 +103,24 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
     @Override
     public void onCheckedChanged(boolean isChecked, String counterpartiesName) {
         isFavorite = isChecked;
+        final String counterpartiesNameForCheckBox = counterpartiesName;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Realm realm = Realm.getDefaultInstance();
 
-        Realm realm = Realm.getDefaultInstance();
+                try {
+                    realm.beginTransaction();
 
-        realm.beginTransaction();
+                    Counterparties counterparties = realm.where(Counterparties.class).equalTo("valueAndAddress", counterpartiesNameForCheckBox).findFirst();
+                    counterparties.setIsFavorite(isFavorite);
+                    realm.commitTransaction();
+                }finally {
+                    realm.close();
+                }
+            }
+        };
+        runnable.run();
 
-        Counterparties counterparties = realm.where(Counterparties.class).equalTo("valueAndAddress", counterpartiesName).findFirst();
-        counterparties.setIsFavorite(isFavorite);
-        realm.commitTransaction();
-
-        realm.close();
     }
 }

@@ -152,22 +152,7 @@ public class ServerUtils {
                         sug;
                 suggestions.add(sb);
 
-                String value = suggestion.getSuggestions().get(i).getValue();
-                String address = suggestion.getSuggestions().get(i).getRealmData().getAddress().getValue();
-                String name = suggestion.getSuggestions().get(i).getRealmData().getManagement().getName();
-                String post = suggestion.getSuggestions().get(i).getRealmData().getManagement().getPost();
-                String opf = suggestion.getSuggestions().get(i).getRealmData().getOpf().getFull();
-
-                realm.beginTransaction();
-                Counterparties counterparties = realm.createObject(Counterparties.class);
-                counterparties.setValue(value);
-                counterparties.setAddress(address);
-                counterparties.setName(name);
-                counterparties.setPost(post);
-                counterparties.setFullOpf(opf);
-                counterparties.setValueAndAddress(sb);
-
-                realm.commitTransaction();
+                cacheMyCounterparties(realm, suggestion, i, sb);
 
                 realm.beginTransaction();
                 Result result = realm.createObject(Result.class);
@@ -208,6 +193,24 @@ public class ServerUtils {
     }
 
     private static void cacheMyCounterparties(Realm realm, RealmDaDataSuggestion suggestion, int i, String sb) {
+        String value = suggestion.getSuggestions().get(i).getValue();
+        String address = suggestion.getSuggestions().get(i).getRealmData().getAddress().getValue();
+        String name = suggestion.getSuggestions().get(i).getRealmData().getManagement().getName();
+        String post = suggestion.getSuggestions().get(i).getRealmData().getManagement().getPost();
+        String opf = suggestion.getSuggestions().get(i).getRealmData().getOpf().getFull();
+        String inn = suggestion.getSuggestions().get(i).getRealmData().getInn();
 
+        realm.beginTransaction();
+
+        Counterparties counterparties = realm.createObject(Counterparties.class);
+        counterparties.setValue(value);
+        counterparties.setAddress(address);
+        counterparties.setName(name);
+        counterparties.setPost(post);
+        counterparties.setFullOpf(opf);
+        counterparties.setValueAndAddress(sb);
+        counterparties.setInn(inn);
+
+        realm.commitTransaction();
     }
 }
