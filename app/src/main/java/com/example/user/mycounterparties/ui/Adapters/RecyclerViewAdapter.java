@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 
@@ -54,6 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private TextView name;
         private TextView address;
         private CounterpartiesItem counterpartiesItem;
+        private CheckBox isFavorite;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -61,24 +64,42 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listner.onClick(counterpartiesItem.getName() + "," +  counterpartiesItem.getAddress());
+                    listner.onClick(counterpartiesItem.getName() + "," + counterpartiesItem.getAddress());
                 }
             });
+
 
             cardView = itemView.findViewById(R.id.cv);
             name = itemView.findViewById(R.id.name);
             address = itemView.findViewById(R.id.address);
+            isFavorite = itemView.findViewById(R.id.chbFavoriteCounterpartiy);
+
+            isFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        counterpartiesItem.setFavorite(true);
+                        listner.onCheckedChanged(counterpartiesItem.isFavorite(), counterpartiesItem.getName() + "," + counterpartiesItem.getAddress());
+                    } else if (!b){
+                        counterpartiesItem.setFavorite(false);
+                        listner.onCheckedChanged(counterpartiesItem.isFavorite(), counterpartiesItem.getName() + "," + counterpartiesItem.getAddress());
+                    }
+                }
+            });
         }
 
-        void bindCounterparties(CounterpartiesItem counterpartiesItem){
+        void bindCounterparties(CounterpartiesItem counterpartiesItem) {
             this.counterpartiesItem = counterpartiesItem;
             name.setText(counterpartiesItem.getName());
             address.setText(counterpartiesItem.getAddress());
+            isFavorite.setChecked(counterpartiesItem.isFavorite());
         }
     }
 
-    public interface Listner{
+    public interface Listner {
         void onClick(String nameAndAddress);
+
+        void onCheckedChanged(boolean isChecked, String counterpartiesName);
     }
 }
 

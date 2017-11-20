@@ -8,6 +8,15 @@ public class CounterpartiesItem {
 
     private String name;
     private String address;
+    private boolean isFavorite;
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
 
     public String getName() {
         return name;

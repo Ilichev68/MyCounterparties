@@ -14,7 +14,7 @@ public class Counterparties extends RealmObject {
     private String post;
     private String fullOpf;
     private String address;
-    private String isFavorite;
+    private boolean isFavorite;
     private String isLast;
     private long whenAdd;
 
@@ -66,11 +66,11 @@ public class Counterparties extends RealmObject {
         this.address = address;
     }
 
-    public String getIsFavorite() {
+    public boolean getIsFavorite() {
         return isFavorite;
     }
 
-    public void setIsFavorite(String favorite) {
+    public void setIsFavorite(boolean favorite) {
         isFavorite = favorite;
     }
 

@@ -30,6 +30,7 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
+    private boolean isFavorite;
 
 
     public LastCounterpartiesFragment() {
@@ -73,6 +74,7 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
                 CounterpartiesItem item = new CounterpartiesItem();
                 item.setName(counterparties.getValue());
                 item.setAddress(counterparties.getAddress());
+                item.setFavorite(counterparties.getIsFavorite());
                 counterpartiesItems.add(item);
             }
 
@@ -87,5 +89,20 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
     @Override
     public void onClick(String nameAndAddress) {
         CounterpartiyActivity.start(getActivity(), nameAndAddress);
+    }
+
+    @Override
+    public void onCheckedChanged(boolean isChecked, String counterpartiesName) {
+        isFavorite = isChecked;
+
+        Realm realm = Realm.getDefaultInstance();
+
+        realm.beginTransaction();
+
+        Counterparties counterparties = realm.where(Counterparties.class).equalTo("valueAndAddress", counterpartiesName).findFirst();
+        counterparties.setIsFavorite(isFavorite);
+        realm.commitTransaction();
+
+        realm.close();
     }
 }

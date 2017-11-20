@@ -21,6 +21,8 @@
             </intent-filter>
         </activity>
         <activity
+            android:parentActivityName=".ui.Activity.MainActivity"
+            android:label=""
             android:name=".ui.Activity.CounterpartiyActivity"
             android:theme="@style/AppTheme" />
     </application>

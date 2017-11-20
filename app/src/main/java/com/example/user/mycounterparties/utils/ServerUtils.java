@@ -2,7 +2,6 @@ package com.example.user.mycounterparties.utils;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.example.user.mycounterparties.interfaces.OnSuggestionsListener;
 import com.example.user.mycounterparties.realm.Counterparties;
@@ -12,7 +11,6 @@ import com.example.user.mycounterparties.realm.Result;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,7 +30,6 @@ import retrofit.RetrofitError;
 
 public class ServerUtils {
 
-    private static final String TAG = "REALM_TESTING";
 
     // Executor that runs queries in a queue
     private final static ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -47,13 +44,10 @@ public class ServerUtils {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "\n=================================================\n");
                 // Trim current query for ignoring whitespaces
                 String queryFromUser = query.replaceAll("\\s+", " ").trim();
-                Log.d(TAG, "query = " + queryFromUser);
                 // If the query is not empty, we proceed
                 if (!queryFromUser.isEmpty()) {
-                    Log.d(TAG, "query is not empty");
                     // Get default instance of Realm
                     Realm realm = Realm.getDefaultInstance();
 
@@ -61,7 +55,6 @@ public class ServerUtils {
                     // If it is cached, we will get results.
                     // Otherwise, we need to query over the Internet
                     RealmResults<Query> queryRealmResults = realm.where(Query.class).equalTo("query", queryFromUser).findAll();
-                    Log.d(TAG, "make request; result size = " + queryRealmResults.size());
                     // Initialize the list of suggestions which we will pass to listener
                     final List<String> suggestions = new ArrayList<>(10);
 
@@ -74,7 +67,6 @@ public class ServerUtils {
                         try {
                             // Synchronously get the answer from DaData
                             suggestion = DaDataRestClient.getInstance().suggestSync(new DaDataBody(queryFromUser, 10));
-                            Log.d(TAG, "get suggestions from server; suggestions size = " + suggestion.getSuggestions().size());
                             success = true;
                         } catch (RetrofitError e) {
                             e.printStackTrace();
@@ -131,7 +123,6 @@ public class ServerUtils {
      * @param suggestions       list which needs to be filled.
      */
     private static void fillSuggestionsFromCache(RealmResults<Query> queryRealmResults, List<String> suggestions) {
-        Log.d(TAG, "fillSuggestionsFromCache");
         for (int i = 0; i < queryRealmResults.size(); i++) {
             RealmList<Result> result = queryRealmResults.get(i).getResult();
 
@@ -150,35 +141,24 @@ public class ServerUtils {
      * @param suggestion    an object that corresponds the answer from DaData.
      */
     private static void cacheUserQueryWithServerResult(String queryFromUser, Realm realm, List<String> suggestions, RealmDaDataSuggestion suggestion) {
-        Log.d(TAG, "cacheUserQueryWithServerResult");
         RealmList<Result> resultsRealm = new RealmList<>();
         if (suggestion != null) {
-            Log.d(TAG, "suggestion != null");
             for (int i = 0; i < suggestion.getSuggestions().size(); i++) {
-                Log.d(TAG, "i = " + i);
                 String suggestionResult = suggestion.getSuggestions().get(i).getValue();
                 String sug = suggestion.getSuggestions().get(i).getRealmData().getAddress().getValue();
 
                 String sb = suggestionResult +
                         "," +
                         sug;
-                Log.d(TAG, "add suggestion = " + sb);
                 suggestions.add(sb);
-                Log.d(TAG, "suggestion added");
 
                 String value = suggestion.getSuggestions().get(i).getValue();
-                Log.d(TAG, "get value");
                 String address = suggestion.getSuggestions().get(i).getRealmData().getAddress().getValue();
-                Log.d(TAG, "get address");
                 String name = suggestion.getSuggestions().get(i).getRealmData().getManagement().getName();
-                Log.d(TAG, "get name");
                 String post = suggestion.getSuggestions().get(i).getRealmData().getManagement().getPost();
-                Log.d(TAG, "get post");
                 String opf = suggestion.getSuggestions().get(i).getRealmData().getOpf().getFull();
-                Log.d(TAG, "get opf");
 
                 realm.beginTransaction();
-                Log.d(TAG, "creating counterparties");
                 Counterparties counterparties = realm.createObject(Counterparties.class);
                 counterparties.setValue(value);
                 counterparties.setAddress(address);
