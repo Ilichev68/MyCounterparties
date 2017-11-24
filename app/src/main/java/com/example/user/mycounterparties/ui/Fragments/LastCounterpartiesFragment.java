@@ -2,9 +2,11 @@ package com.example.user.mycounterparties.ui.Fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,8 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LastCounterpartiesFragment extends Fragment implements RecyclerViewAdapter.Listner {
+public class LastCounterpartiesFragment extends AbstractFragment implements RecyclerViewAdapter.Listner {
+
 
 
     private RecyclerView recyclerView;
@@ -36,11 +39,6 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
     public LastCounterpartiesFragment() {
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        update();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +52,14 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
         return view;
     }
 
-    private void update() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        update();
+    }
+
+    @Override
+    public void update() {
         List<CounterpartiesItem> list = getAllLastCounterparties();
         adapter = new RecyclerViewAdapter(list);
         adapter.setListner(this);
@@ -68,8 +73,14 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
         Realm realm = Realm.getDefaultInstance();
 
         try {
-            RealmResults<Counterparties> answerWithoutFavorite = realm.where(Counterparties.class).equalTo("isFavorite", true).equalTo("isLast", "yes").findAllSorted("whenAdd");
-            RealmResults<Counterparties> answerWithFavorite = realm.where(Counterparties.class).equalTo("isLast", "yes").equalTo("isFavorite", false).findAllSorted("whenAdd");
+            RealmResults<Counterparties> answerWithoutFavorite = realm.where(Counterparties.class)
+                    .equalTo("isFavorite", true)
+                    .equalTo("isLast", "yes")
+                    .findAllSorted("whenAdd");
+            RealmResults<Counterparties> answerWithFavorite = realm.where(Counterparties.class)
+                    .equalTo("isLast", "yes")
+                    .equalTo("isFavorite", false)
+                    .findAllSorted("whenAdd");
 
             for (Counterparties counterparties : answerWithFavorite) {
                 CounterpartiesItem item = new CounterpartiesItem();
@@ -90,6 +101,7 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
         } finally {
             realm.close();
         }
+
         Collections.reverse(counterpartiesItems);
 
         return counterpartiesItems;

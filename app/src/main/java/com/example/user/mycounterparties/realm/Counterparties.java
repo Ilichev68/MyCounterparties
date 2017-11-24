@@ -14,9 +14,6 @@ public class Counterparties extends RealmObject {
     private String post;
     private String fullOpf;
     private String address;
-
-
-
     private String inn;
     private boolean isFavorite;
     private String isLast;

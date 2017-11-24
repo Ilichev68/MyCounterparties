@@ -31,7 +31,6 @@ import retrofit.RetrofitError;
 public class ServerUtils {
 
 
-    // Executor that runs queries in a queue
     private final static ExecutorService executor = Executors.newSingleThreadExecutor();
 
     /**
@@ -44,28 +43,18 @@ public class ServerUtils {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                // Trim current query for ignoring whitespaces
                 String queryFromUser = query.replaceAll("\\s+", " ").trim();
-                // If the query is not empty, we proceed
                 if (!queryFromUser.isEmpty()) {
-                    // Get default instance of Realm
                     Realm realm = Realm.getDefaultInstance();
 
-                    // Query realm for current user query.
-                    // If it is cached, we will get results.
-                    // Otherwise, we need to query over the Internet
                     RealmResults<Query> queryRealmResults = realm.where(Query.class).equalTo("query", queryFromUser).findAll();
-                    // Initialize the list of suggestions which we will pass to listener
                     final List<String> suggestions = new ArrayList<>(10);
 
                     boolean success = false;
 
-                    // If we have no cache on this query,
-                    // we have to query over the Internet
                     if (queryRealmResults.size() == 0) {
                         RealmDaDataSuggestion suggestion = null;
                         try {
-                            // Synchronously get the answer from DaData
                             suggestion = DaDataRestClient.getInstance().suggestSync(new DaDataBody(queryFromUser, 10));
                             success = true;
                         } catch (RetrofitError e) {
@@ -79,18 +68,14 @@ public class ServerUtils {
                         }
 
                         if (success) {
-                            // Cache if success
                             cacheUserQueryWithServerResult(queryFromUser, realm, suggestions, suggestion);
                         }
                     } else {
-                        // Fill from cache
                         fillSuggestionsFromCache(queryRealmResults, suggestions);
                     }
 
-                    // Close current open Realm instance
                     realm.close();
 
-                    // Update suggestions
                     dispatchUpdate(suggestions, listener);
                 }
             }

@@ -8,4 +8,10 @@
     <string name="head">Руководитель:</string>
     <string name="address">Адрес:</string>
     <string name="inn">ИНН:</string>
+    <string name="management_name">Должность рук.:</string>
+    <string name="favorite">избранное</string>
+    <string name="delete">удалить</string>
+    <string name="no">нет</string>
+    <string name="yes">да</string>
+    <string name="message_text">Удалить организацию из списка последних?</string>
 </resources>

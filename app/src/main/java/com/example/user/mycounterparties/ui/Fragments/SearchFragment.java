@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment implements TextWatcher, OnSuggestionsListener {
+public class SearchFragment extends AbstractFragment implements TextWatcher, OnSuggestionsListener {
 
     private static final List<String> EMPTY = new ArrayList<>();
     private DaDataArrayAdapter<String> adapter;
@@ -87,5 +87,10 @@ public class SearchFragment extends Fragment implements TextWatcher, OnSuggestio
 
         toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    @Override
+    public void update() {
+
     }
 }
