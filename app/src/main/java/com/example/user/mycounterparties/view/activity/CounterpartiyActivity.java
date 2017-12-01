@@ -1,18 +1,16 @@
-package com.example.user.mycounterparties.ui.Activity;
+package com.example.user.mycounterparties.view.activity;
 
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.realm.Counterparties;
-import com.example.user.mycounterparties.ui.Fragments.DialogFragmentForDelete;
+import com.example.user.mycounterparties.view.fragments.DialogFragmentForDelete;
 
 import io.realm.Realm;
 
@@ -35,9 +33,9 @@ public class CounterpartiyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_counterpartiy);
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-
 
         orgName = findViewById(R.id.text);
         fullName = findViewById(R.id.full_name);
@@ -116,9 +114,9 @@ public class CounterpartiyActivity extends AppCompatActivity {
         MenuItem unfave = menu.findItem(R.id.menu_item_no_favorite);
         MenuItem delete = menu.findItem(R.id.menu_item_delete);
 
-            fave.setVisible(isFavorite());
-            unfave.setVisible(!isFavorite());
-            delete.setVisible(true);
+        fave.setVisible(isFavorite());
+        unfave.setVisible(!isFavorite());
+        delete.setVisible(true);
         return true;
     }
 
@@ -149,7 +147,7 @@ public class CounterpartiyActivity extends AppCompatActivity {
         }
     }
 
-    private void setFavorite(boolean isFavorite){
+    private void setFavorite(boolean isFavorite) {
         Realm realm = Realm.getDefaultInstance();
         try {
             String txt = (String) getIntent().getExtras().get("text");
@@ -160,7 +158,7 @@ public class CounterpartiyActivity extends AppCompatActivity {
             counterparties.setIsFavorite(isFavorite);
 
             realm.commitTransaction();
-        }finally {
+        } finally {
             realm.close();
         }
 

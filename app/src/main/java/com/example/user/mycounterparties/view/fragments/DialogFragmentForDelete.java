@@ -1,4 +1,4 @@
-package com.example.user.mycounterparties.ui.Fragments;
+package com.example.user.mycounterparties.view.fragments;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -63,6 +63,7 @@ public class DialogFragmentForDelete extends DialogFragment {
                     realm.beginTransaction();
 
                     counterparties.setIsLast("");
+                    counterparties.setIsFavorite(false);
 
                     realm.commitTransaction();
                 } finally {

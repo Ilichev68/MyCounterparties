@@ -1,21 +1,21 @@
-package com.example.user.mycounterparties.ui.Fragments;
+package com.example.user.mycounterparties.view.fragments;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.realm.Counterparties;
-import com.example.user.mycounterparties.ui.Activity.CounterpartiyActivity;
-import com.example.user.mycounterparties.ui.Adapters.RecyclerViewAdapter;
-import com.example.user.mycounterparties.ui.CounterpartiesItem;
+import com.example.user.mycounterparties.view.activity.CounterpartiyActivity;
+import com.example.user.mycounterparties.view.activity.SearchActivity;
+import com.example.user.mycounterparties.view.adapters.RecyclerViewAdapter;
+import com.example.user.mycounterparties.view.CounterpartiesItem;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,13 +27,14 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LastCounterpartiesFragment extends AbstractFragment implements RecyclerViewAdapter.Listner {
+public class LastCounterpartiesFragment extends Fragment implements RecyclerViewAdapter.Listner {
 
 
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private boolean isFavorite;
+    private FloatingActionButton fab;
 
 
     public LastCounterpartiesFragment() {
@@ -46,6 +47,15 @@ public class LastCounterpartiesFragment extends AbstractFragment implements Recy
         View view = inflater.inflate(R.layout.fragment_last_counterparties, container, false);
 
         recyclerView = view.findViewById(R.id.rv);
+        fab = view.findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchActivity.start(getActivity());
+            }
+        });
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         update();
 
@@ -58,12 +68,12 @@ public class LastCounterpartiesFragment extends AbstractFragment implements Recy
         update();
     }
 
-    @Override
     public void update() {
         List<CounterpartiesItem> list = getAllLastCounterparties();
         adapter = new RecyclerViewAdapter(list);
         adapter.setListner(this);
         recyclerView.setAdapter(adapter);
+        fab.attachToRecyclerView(recyclerView);
     }
 
     public List<CounterpartiesItem> getAllLastCounterparties() {

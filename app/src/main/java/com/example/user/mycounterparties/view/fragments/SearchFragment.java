@@ -1,4 +1,4 @@
-package com.example.user.mycounterparties.ui.Fragments;
+package com.example.user.mycounterparties.view.fragments;
 
 
 import android.os.Bundle;
@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.interfaces.OnSuggestionsListener;
-import com.example.user.mycounterparties.ui.Activity.CounterpartiyActivity;
-import com.example.user.mycounterparties.ui.Adapters.DaDataArrayAdapter;
+import com.example.user.mycounterparties.view.activity.CounterpartiyActivity;
+import com.example.user.mycounterparties.view.adapters.DaDataArrayAdapter;
 import com.example.user.mycounterparties.utils.ServerUtils;
 
 import java.util.ArrayList;
@@ -24,7 +24,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends AbstractFragment implements TextWatcher, OnSuggestionsListener {
+public class SearchFragment extends Fragment implements TextWatcher, OnSuggestionsListener {
+
 
     private static final List<String> EMPTY = new ArrayList<>();
     private DaDataArrayAdapter<String> adapter;
@@ -89,8 +90,4 @@ public class SearchFragment extends AbstractFragment implements TextWatcher, OnS
         toast.show();
     }
 
-    @Override
-    public void update() {
-
-    }
 }

@@ -1,4 +1,4 @@
-package com.example.user.mycounterparties.ui.Adapters;
+package com.example.user.mycounterparties.view.adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 
 import com.example.user.mycounterparties.R;
-import com.example.user.mycounterparties.ui.CounterpartiesItem;
+import com.example.user.mycounterparties.view.CounterpartiesItem;
 
 import java.util.List;
 

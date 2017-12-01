@@ -1,4 +1,4 @@
-package com.example.user.mycounterparties.ui;
+package com.example.user.mycounterparties.view;
 
 /**
  * Created by User on 17.11.2017.
