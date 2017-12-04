@@ -1,4 +1,4 @@
-package com.example.user.mycounterparties.rest;
+package com.example.user.mycounterparties.model.rest;
 
 import com.example.user.mycounterparties.BuildConfig;
 import com.example.user.mycounterparties.realm.RealmDaDataSuggestion;

@@ -19,8 +19,8 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
-import com.example.user.mycounterparties.rest.DaDataBody;
-import com.example.user.mycounterparties.rest.DaDataRestClient;
+import com.example.user.mycounterparties.model.rest.DaDataBody;
+import com.example.user.mycounterparties.model.rest.DaDataRestClient;
 
 import retrofit.RetrofitError;
 

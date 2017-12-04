@@ -1,4 +1,4 @@
-package com.example.user.mycounterparties.rest;
+package com.example.user.mycounterparties.model.rest;
 
 /**
  * Created by User on 02.11.2017.

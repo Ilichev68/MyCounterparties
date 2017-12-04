@@ -5,4 +5,7 @@ package com.example.user.mycounterparties.view.interfaces;
  */
 
 public interface ICounterpartiesDetailsView {
+
+    void showCounterpartiesDetails(String fullName,String orgName,String address,String managementName,String managementPost,String inn);
+    void showDialogFragmentForDelete(String valueAndAddress);
 }

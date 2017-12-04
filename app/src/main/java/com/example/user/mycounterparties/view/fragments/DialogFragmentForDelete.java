@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.user.mycounterparties.R;
+import com.example.user.mycounterparties.presenter.CounterpartiesDetailsPresenter;
 import com.example.user.mycounterparties.realm.Counterparties;
+import com.example.user.mycounterparties.view.interfaces.ICounterpartiesDetailsView;
+import com.example.user.mycounterparties.view.interfaces.IDialogFragmentForDelete;
 
 import io.realm.Realm;
 
@@ -17,11 +20,12 @@ import io.realm.Realm;
  * Created by User on 23.11.2017.
  */
 
-public class DialogFragmentForDelete extends DialogFragment {
+public class DialogFragmentForDelete extends DialogFragment implements IDialogFragmentForDelete {
 
     private Button btnYes;
     private Button btnNo;
     private String valueAndAddress;
+    private CounterpartiesDetailsPresenter presenter;
 
     @Nullable
     @Override
@@ -32,10 +36,12 @@ public class DialogFragmentForDelete extends DialogFragment {
         btnYes = v.findViewById(R.id.btnYes);
         btnNo = v.findViewById(R.id.btnNo);
 
+        initialize(this);
+
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteCounterpartiy();
+                presenter.deleteCounterpartiyFromLast(valueAndAddress);
                 dismiss();
             }
         });
@@ -50,32 +56,13 @@ public class DialogFragmentForDelete extends DialogFragment {
         return v;
     }
 
-    private void deleteCounterpartiy() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Realm realm = Realm.getDefaultInstance();
-                try {
-                    Counterparties counterparties = realm.where(Counterparties.class)
-                            .equalTo("valueAndAddress", valueAndAddress)
-                            .findFirst();
-
-                    realm.beginTransaction();
-
-                    counterparties.setIsLast("");
-                    counterparties.setIsFavorite(false);
-
-                    realm.commitTransaction();
-                } finally {
-                    realm.close();
-                }
-            }
-        };
-        runnable.run();
-    }
 
     public void setValueAndAddress(String valueAndAddress) {
         this.valueAndAddress = valueAndAddress;
 
+    }
+
+    private void initialize(IDialogFragmentForDelete iDialogFragmentForDelete) {
+        presenter = new CounterpartiesDetailsPresenter(iDialogFragmentForDelete);
     }
 }
