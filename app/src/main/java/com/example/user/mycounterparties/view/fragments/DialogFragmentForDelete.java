@@ -10,11 +10,7 @@ import android.widget.Button;
 
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.presenter.CounterpartiesDetailsPresenter;
-import com.example.user.mycounterparties.realm.Counterparties;
-import com.example.user.mycounterparties.view.interfaces.ICounterpartiesDetailsView;
 import com.example.user.mycounterparties.view.interfaces.IDialogFragmentForDelete;
-
-import io.realm.Realm;
 
 /**
  * Created by User on 23.11.2017.

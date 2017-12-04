@@ -39,10 +39,9 @@ public class CounterpartiyActivity extends AppCompatActivity implements ICounter
         initialize(this);
 
         valueAndAddress = (String) getIntent().getExtras().get("text");
-
-
+        
         setContentView(R.layout.activity_counterpartiy);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
         orgName = findViewById(R.id.text);
         fullName = findViewById(R.id.full_name);

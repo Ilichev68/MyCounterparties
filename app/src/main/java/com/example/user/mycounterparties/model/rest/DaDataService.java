@@ -1,6 +1,6 @@
 package com.example.user.mycounterparties.model.rest;
 
-import com.example.user.mycounterparties.realm.RealmDaDataSuggestion;
+import com.example.user.mycounterparties.model.realm.RealmDaDataSuggestion;
 
 import retrofit.Callback;
 import retrofit.http.Body;

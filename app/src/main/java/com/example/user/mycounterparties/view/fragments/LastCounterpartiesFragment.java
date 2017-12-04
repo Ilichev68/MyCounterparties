@@ -12,20 +12,12 @@ import android.view.ViewGroup;
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.presenter.LastCounterpartiesPresenter;
 import com.example.user.mycounterparties.presenter.interfaces.ILastCounterpartiesPresenter;
-import com.example.user.mycounterparties.realm.Counterparties;
-import com.example.user.mycounterparties.view.activity.CounterpartiyActivity;
-import com.example.user.mycounterparties.view.activity.SearchActivity;
 import com.example.user.mycounterparties.view.adapters.RecyclerViewAdapter;
 import com.example.user.mycounterparties.view.CounterpartiesItem;
 import com.example.user.mycounterparties.view.interfaces.ILastCunterpartiesView;
 import com.melnykov.fab.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.

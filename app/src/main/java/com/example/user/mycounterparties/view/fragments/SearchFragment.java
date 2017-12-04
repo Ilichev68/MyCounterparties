@@ -13,10 +13,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.example.user.mycounterparties.R;
-import com.example.user.mycounterparties.interfaces.OnSuggestionsListener;
+import com.example.user.mycounterparties.presenter.SearchPresenter;
+import com.example.user.mycounterparties.presenter.interfaces.ISearchPresenter;
 import com.example.user.mycounterparties.view.activity.CounterpartiyActivity;
 import com.example.user.mycounterparties.view.adapters.DaDataArrayAdapter;
-import com.example.user.mycounterparties.utils.ServerUtils;
+import com.example.user.mycounterparties.view.interfaces.ISearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +25,14 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment implements TextWatcher, OnSuggestionsListener {
+public class SearchFragment extends Fragment implements TextWatcher, ISearchView {
 
 
     private static final List<String> EMPTY = new ArrayList<>();
     private DaDataArrayAdapter<String> adapter;
     private AutoCompleteTextView textView;
     private Toast toast;
+    private ISearchPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,6 +41,7 @@ public class SearchFragment extends Fragment implements TextWatcher, OnSuggestio
         textView = view.findViewById(R.id.autocompletetextview_activitymain);
         adapter = new DaDataArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, EMPTY);
 
+        initialize(this);
         textView.setAdapter(adapter);
 
         textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -69,11 +72,21 @@ public class SearchFragment extends Fragment implements TextWatcher, OnSuggestio
 
     @Override
     public void afterTextChanged(final Editable s) {
-        ServerUtils.query(s.toString(), this);
+        presenter.sendQueryToDaData(s.toString());
+    }
+
+
+    @Override
+    public void showError(String error) {
+        if (toast != null)
+            toast.cancel();
+
+        toast = Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     @Override
-    public synchronized void onSuggestionsReady(List<String> suggestions) {
+    public synchronized void showSuggestions(List<String> suggestions) {
         adapter.clear();
 
         adapter.addAll(suggestions);
@@ -81,13 +94,7 @@ public class SearchFragment extends Fragment implements TextWatcher, OnSuggestio
         adapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onError(String message) {
-        if (toast != null)
-            toast.cancel();
-
-        toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
-        toast.show();
+    private void initialize(ISearchView iSearchView) {
+        presenter = new SearchPresenter(iSearchView);
     }
-
 }

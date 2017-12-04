@@ -1,7 +1,7 @@
 package com.example.user.mycounterparties.model.rest;
 
 import com.example.user.mycounterparties.BuildConfig;
-import com.example.user.mycounterparties.realm.RealmDaDataSuggestion;
+import com.example.user.mycounterparties.model.realm.RealmDaDataSuggestion;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

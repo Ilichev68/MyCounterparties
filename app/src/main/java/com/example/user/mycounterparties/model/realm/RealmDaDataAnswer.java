@@ -1,4 +1,4 @@
-package com.example.user.mycounterparties.realm;
+package com.example.user.mycounterparties.model.realm;
 
 import com.google.gson.annotations.SerializedName;
 

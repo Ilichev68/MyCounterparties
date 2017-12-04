@@ -1,4 +1,4 @@
-package com.example.user.mycounterparties.realm;
+package com.example.user.mycounterparties.model.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
