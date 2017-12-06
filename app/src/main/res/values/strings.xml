@@ -13,5 +13,5 @@
     <string name="delete">удалить</string>
     <string name="no">нет</string>
     <string name="yes">да</string>
-    <string name="message_text">Удалить организацию из списка последних?</string>
+    <string name="message_text">Удалить организацию из списка недавних?</string>
 </resources>

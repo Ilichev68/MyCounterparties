@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <android.support.v7.widget.RecyclerView xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/rv"
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:src="@drawable/ic_action_add"
-        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorNormal="@color/colorPrimary"
         fab:fab_colorPressed="@color/colorPrimaryDark"
         fab:fab_colorRipple="@color/colorPrimary" />
 

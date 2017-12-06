@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        transaction.add(R.id.container, lastCounterpartiesFragment).commit();
+        transaction.replace(R.id.container, lastCounterpartiesFragment).commit();
     }
 
 }

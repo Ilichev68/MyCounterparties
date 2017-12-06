@@ -211,7 +211,6 @@ public class Model implements IModel {
                             success = true;
                         } catch (RetrofitError e) {
                             e.printStackTrace();
-
                             iSearchPresenter.getErrorMassege(e.getMessage());
                         } catch (Exception e) {
                             e.printStackTrace();

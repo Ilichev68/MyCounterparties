@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.presenter.LastCounterpartiesPresenter;
 import com.example.user.mycounterparties.presenter.interfaces.ILastCounterpartiesPresenter;
+import com.example.user.mycounterparties.view.activity.SearchActivity;
 import com.example.user.mycounterparties.view.adapters.RecyclerViewAdapter;
 import com.example.user.mycounterparties.view.CounterpartiesItem;
 import com.example.user.mycounterparties.view.interfaces.ILastCunterpartiesView;
@@ -54,6 +55,7 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         presenter.downloadCounterpartiesFromCache();
+
 
         return view;
     }
