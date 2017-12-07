@@ -1,13 +1,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#dfdfdf"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="24dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:paddingTop="24dp"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
-    <FrameLayout
-        android:id="@+id/container_for_search"
+    <TextView
+        android:id="@+id/textview_activitymain_youracounterparties"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/input_your_counterparties" />
+
+
+    <AutoCompleteTextView
+        android:id="@+id/autocompletetextview_activitymain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:completionThreshold="1"
+        android:inputType="textCapWords|textAutoComplete" />
 
 </LinearLayout>

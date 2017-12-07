@@ -3,7 +3,7 @@
     <string name="input_your_counterparties">Введите название или ИНН контрагента:</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="full_name">Форма собственности:</string>
+    <string name="full_name">Форма собств.:</string>
     <string name="type">Тип организации:</string>
     <string name="head">Руководитель:</string>
     <string name="address">Адрес:</string>
