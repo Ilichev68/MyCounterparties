@@ -10,6 +10,7 @@ public class Address extends RealmObject {
 
     private String value;
     private String unrestricted_value;
+    private Data data;
 
     public String getValue() {
         return value;
@@ -27,5 +28,12 @@ public class Address extends RealmObject {
         this.unrestricted_value = unrestricted_value;
     }
 
+    public Data getData() {
+        if (data!=null) return data;
+        else return new Data(0,0);
+    }
 
+    public void setData(Data data) {
+        this.data = data;
+    }
 }

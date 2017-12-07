@@ -6,15 +6,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.presenter.CounterpartiesDetailsPresenter;
 import com.example.user.mycounterparties.view.fragments.DialogFragmentForDelete;
 import com.example.user.mycounterparties.view.interfaces.ICounterpartiesDetailsView;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.MapFragment;
 
 
-public class CounterpartiyActivity extends AppCompatActivity implements ICounterpartiesDetailsView {
+public class CounterpartiyActivity extends AppCompatActivity implements ICounterpartiesDetailsView, OnMapReadyCallback {
 
     private TextView orgName;
     private TextView fullName;
@@ -22,8 +26,10 @@ public class CounterpartiyActivity extends AppCompatActivity implements ICounter
     private TextView managementName;
     private TextView managementPost;
     private TextView inn;
+    private Button share;
     private CounterpartiesDetailsPresenter presenter;
     private String valueAndAddress;
+    private GoogleMap map;
 
     public static void start(Context context, String text) {
         Intent starter = new Intent(context, CounterpartiyActivity.class);
@@ -44,16 +50,22 @@ public class CounterpartiyActivity extends AppCompatActivity implements ICounter
         valueAndAddress = (String) getIntent().getExtras().get("text");
 
 
-//        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-
         orgName = findViewById(R.id.text);
         fullName = findViewById(R.id.full_name);
         address = findViewById(R.id.address);
         managementName = findViewById(R.id.managements_name);
         managementPost = findViewById(R.id.managements_post);
         inn = findViewById(R.id.inn);
+        share = findViewById(R.id.share);
 
         presenter.downloadCounterpartiesDetailsFromCache(valueAndAddress);
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.shareCounterpatiyDetails();
+            }
+        });
 
 
     }
@@ -116,8 +128,29 @@ public class CounterpartiyActivity extends AppCompatActivity implements ICounter
         dialogFragmentForDelete.show(getFragmentManager(), "dialogForDelete");
     }
 
+    @Override
+    public void shareDetails(String counterpartiyDetails) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("newText/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, counterpartiyDetails);
+        startActivity(Intent.createChooser(intent, "Share with"));
+    }
+
+    @Override
+    public void showMap() {
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
     private void initialize(ICounterpartiesDetailsView iCounterpartiesDetailsView) {
         presenter = new CounterpartiesDetailsPresenter(iCounterpartiesDetailsView);
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        presenter.detailsForMap(googleMap);
     }
 }
 

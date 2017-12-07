@@ -8,11 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.presenter.LastCounterpartiesPresenter;
 import com.example.user.mycounterparties.presenter.interfaces.ILastCounterpartiesPresenter;
-import com.example.user.mycounterparties.view.activity.SearchActivity;
 import com.example.user.mycounterparties.view.adapters.RecyclerViewAdapter;
 import com.example.user.mycounterparties.view.CounterpartiesItem;
 import com.example.user.mycounterparties.view.interfaces.ILastCunterpartiesView;
@@ -29,6 +29,7 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private FloatingActionButton fab;
+    private TextView textViewIfRvEmpy;
     private ILastCounterpartiesPresenter presenter;
 
 
@@ -45,6 +46,7 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
 
         recyclerView = view.findViewById(R.id.rv);
         fab = view.findViewById(R.id.fab);
+        textViewIfRvEmpy = view.findViewById(R.id.text_if_rv_empty);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,13 +82,18 @@ public class LastCounterpartiesFragment extends Fragment implements RecyclerView
 
     @Override
     public void showAllLastCounterparties(List<CounterpartiesItem> counterpartiesItems) {
+        if (counterpartiesItems.size() == 0) textViewIfRvEmpy.setVisibility(View.VISIBLE);
+        else textViewIfRvEmpy.setVisibility(View.INVISIBLE);
+
         adapter = new RecyclerViewAdapter(counterpartiesItems);
         adapter.setListner(this);
         recyclerView.setAdapter(adapter);
         fab.attachToRecyclerView(recyclerView);
+
     }
 
     private void initialize(ILastCunterpartiesView iLastCunterpartiesView) {
         presenter = new LastCounterpartiesPresenter(iLastCunterpartiesView);
     }
+
 }

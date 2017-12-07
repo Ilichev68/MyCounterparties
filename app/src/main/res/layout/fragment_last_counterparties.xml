@@ -9,6 +9,7 @@
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
         tools:listitem="@layout/counterparties_item">
 
 
@@ -24,6 +25,14 @@
         fab:fab_colorNormal="@color/colorPrimary"
         fab:fab_colorPressed="@color/colorPrimaryDark"
         fab:fab_colorRipple="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/text_if_rv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:text="@string/text_if_rv_empty" />
 
 
 </FrameLayout>

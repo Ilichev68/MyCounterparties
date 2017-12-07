@@ -42,6 +42,7 @@ public class SearchFragment extends Fragment implements TextWatcher, ISearchView
         adapter = new DaDataArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, EMPTY);
 
         initialize(this);
+
         textView.setAdapter(adapter);
 
         textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

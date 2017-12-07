@@ -18,6 +18,9 @@ public class Counterparties extends RealmObject {
     private boolean isFavorite;
     private String isLast;
     private long whenAdd;
+    private double geo_lat;
+    private double geo_lon;
+
 
     public long getWhenAdd() {
         return whenAdd;
@@ -97,6 +100,22 @@ public class Counterparties extends RealmObject {
 
     public void setInn(String inn) {
         this.inn = inn;
+    }
+
+    public double getGeo_lat() {
+        return geo_lat;
+    }
+
+    public void setGeo_lat(double geo_lat) {
+        this.geo_lat = geo_lat;
+    }
+
+    public double getGeo_lon() {
+        return geo_lon;
+    }
+
+    public void setGeo_lon(double geo_lon) {
+        this.geo_lon = geo_lon;
     }
 
 }

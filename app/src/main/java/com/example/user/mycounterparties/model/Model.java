@@ -135,7 +135,9 @@ public class Model implements IModel {
                                 data.getAddress(),
                                 data.getName(),
                                 data.getPost(),
-                                data.getInn());
+                                data.getInn(),
+                                data.getGeo_lat(),
+                                data.getGeo_lon());
 
                 } finally {
                     realm.close();
@@ -288,10 +290,12 @@ public class Model implements IModel {
         String post = suggestion.getSuggestions().get(i).getRealmData().getManagement().getPost();
         String opf = suggestion.getSuggestions().get(i).getRealmData().getOpf().getFull();
         String inn = suggestion.getSuggestions().get(i).getRealmData().getInn();
-
+        double geo_lat = suggestion.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lat();
+        double geo_lon = suggestion.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lon();
         realm.beginTransaction();
 
         Counterparties counterparties = realm.createObject(Counterparties.class);
+
         counterparties.setValue(value);
         counterparties.setAddress(address);
         counterparties.setName(name);
@@ -299,6 +303,8 @@ public class Model implements IModel {
         counterparties.setFullOpf(opf);
         counterparties.setValueAndAddress(sb);
         counterparties.setInn(inn);
+        counterparties.setGeo_lat(geo_lat);
+        counterparties.setGeo_lon(geo_lon);
 
         realm.commitTransaction();
     }

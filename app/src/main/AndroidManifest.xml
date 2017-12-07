@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
 
     <application
         android:name=".MyCounterpartiesApplication"
@@ -26,9 +29,19 @@
             android:parentActivityName=".view.activity.MainActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:label=""
             android:name=".view.activity.SearchActivity"
+            android:label=""
             android:parentActivityName=".view.activity.MainActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAJ7tzYuigPUvWPc3fSuq9DGC_eDedA_7U" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+
     </application>
+
 
 </manifest>

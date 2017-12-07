@@ -3,7 +3,7 @@
     <string name="input_your_counterparties">Введите название или ИНН контрагента:</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="full_name">Полное название:</string>
+    <string name="full_name">Форма собственности:</string>
     <string name="type">Тип организации:</string>
     <string name="head">Руководитель:</string>
     <string name="address">Адрес:</string>
@@ -14,4 +14,7 @@
     <string name="no">нет</string>
     <string name="yes">да</string>
     <string name="message_text">Удалить организацию из списка недавних?</string>
+    <string name="share">share</string>
+    <string name="text_if_rv_empty">Вы пока не добавили ни одного контрагента в свой список.</string>
+    <string name="action_search">Search</string>
 </resources>
