@@ -2,12 +2,15 @@ package com.example.user.mycounterparties.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.user.mycounterparties.R;
@@ -18,7 +21,7 @@ import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.MapFragment;
 
 
-public class CounterpartiyActivity extends AppCompatActivity implements ICounterpartiesDetailsView, OnMapReadyCallback {
+public class CounterpartiyActivity extends AppCompatActivity implements ICounterpartiesDetailsView {
 
     private TextView orgName;
     private TextView fullName;
@@ -30,6 +33,8 @@ public class CounterpartiyActivity extends AppCompatActivity implements ICounter
     private CounterpartiesDetailsPresenter presenter;
     private String valueAndAddress;
     private GoogleMap map;
+//    private LinearLayout linearLayout;
+//    private ProgressBar progressBar;
 
     public static void start(Context context, String text) {
         Intent starter = new Intent(context, CounterpartiyActivity.class);
@@ -50,6 +55,8 @@ public class CounterpartiyActivity extends AppCompatActivity implements ICounter
         valueAndAddress = (String) getIntent().getExtras().get("text");
 
 
+//        progressBar = findViewById(R.id.progressBar);
+//        linearLayout = findViewById(R.id.counterparties_details);
         orgName = findViewById(R.id.text);
         fullName = findViewById(R.id.full_name);
         address = findViewById(R.id.address);
@@ -58,6 +65,7 @@ public class CounterpartiyActivity extends AppCompatActivity implements ICounter
         inn = findViewById(R.id.inn);
         share = findViewById(R.id.share);
 
+//        linearLayout.setVisibility(View.INVISIBLE);
         presenter.downloadCounterpartiesDetailsFromCache(valueAndAddress);
 
         share.setOnClickListener(new View.OnClickListener() {
@@ -140,18 +148,27 @@ public class CounterpartiyActivity extends AppCompatActivity implements ICounter
     public void showMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                presenter.setDetailsForMap(googleMap);
+
+            }
+        });
+
     }
+
+//    @Override
+//    public void showAll() {
+//        linearLayout.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.INVISIBLE);
+//    }
+
 
     private void initialize(ICounterpartiesDetailsView iCounterpartiesDetailsView) {
         presenter = new CounterpartiesDetailsPresenter(iCounterpartiesDetailsView);
     }
 
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        presenter.detailsForMap(googleMap);
-    }
 }
-
 

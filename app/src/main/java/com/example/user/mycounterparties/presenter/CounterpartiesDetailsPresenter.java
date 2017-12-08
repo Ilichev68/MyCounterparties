@@ -88,7 +88,7 @@ public class CounterpartiesDetailsPresenter implements ICounterpartyesDetailsPre
     }
 
     @Override
-    public void detailsForMap(GoogleMap googleMap) {
+    public void setDetailsForMap(GoogleMap googleMap) {
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(geo_lat, geo_lon))
@@ -101,6 +101,7 @@ public class CounterpartiesDetailsPresenter implements ICounterpartyesDetailsPre
                 .build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
         googleMap.animateCamera(cameraUpdate);
+//        iCounterpartiesDetailsView.get().showAll();
 
     }
 

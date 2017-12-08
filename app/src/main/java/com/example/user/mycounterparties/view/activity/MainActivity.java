@@ -18,7 +18,7 @@ import com.example.user.mycounterparties.view.adapters.RecyclerViewAdapter;
 import com.example.user.mycounterparties.view.interfaces.ILastCunterpartiesView;
 import com.melnykov.fab.FloatingActionButton;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.Listner, ILastCunterpartiesView {
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     }
 
     @Override
-    public void showAllLastCounterparties(List<CounterpartiesItem> counterpartiesItems) {
+    public void showAllLastCounterparties(ArrayList<CounterpartiesItem> counterpartiesItems) {
         if (counterpartiesItems.size() == 0) textViewIfRvEmpy.setVisibility(View.VISIBLE);
         else textViewIfRvEmpy.setVisibility(View.INVISIBLE);
 
@@ -105,7 +105,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             }
             @Override
             public boolean onQueryTextChange(String s) {
-                return false;
+                adapter.getFilter().filter(s);
+                return true;
             }
         });
         return true;

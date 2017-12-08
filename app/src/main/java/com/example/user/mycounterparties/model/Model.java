@@ -49,43 +49,50 @@ public class Model implements IModel {
 
     @Override
     public void downloadCounterparties() {
-        List<CounterpartiesItem> counterpartiesItems = new ArrayList<>();
+        final ArrayList<CounterpartiesItem> counterpartiesItems = new ArrayList<>();
 
-        Realm realm = Realm.getDefaultInstance();
+        final Realm realm = Realm.getDefaultInstance();
 
-        try {
-            RealmResults<Counterparties> answerWithoutFavorite = realm.where(Counterparties.class)
-                    .equalTo("isFavorite", true)
-                    .equalTo("isLast", "yes")
-                    .findAllSorted("whenAdd");
-            RealmResults<Counterparties> answerWithFavorite = realm.where(Counterparties.class)
-                    .equalTo("isLast", "yes")
-                    .equalTo("isFavorite", false)
-                    .findAllSorted("whenAdd");
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    RealmResults<Counterparties> answerWithoutFavorite = realm.where(Counterparties.class)
+                            .equalTo("isFavorite", true)
+                            .equalTo("isLast", "yes")
+                            .findAllSorted("whenAdd");
+                    RealmResults<Counterparties> answerWithFavorite = realm.where(Counterparties.class)
+                            .equalTo("isLast", "yes")
+                            .equalTo("isFavorite", false)
+                            .findAllSorted("whenAdd");
 
-            for (Counterparties counterparties : answerWithFavorite) {
-                CounterpartiesItem item = new CounterpartiesItem();
-                item.setName(counterparties.getValue());
-                item.setAddress(counterparties.getAddress());
-                item.setFavorite(counterparties.getIsFavorite());
-                counterpartiesItems.add(item);
+                    for (Counterparties counterparties : answerWithFavorite) {
+                        CounterpartiesItem item = new CounterpartiesItem();
+                        item.setName(counterparties.getValue());
+                        item.setAddress(counterparties.getAddress());
+                        item.setFavorite(counterparties.getIsFavorite());
+                        counterpartiesItems.add(item);
+                    }
+
+                    for (Counterparties counterparties : answerWithoutFavorite) {
+                        CounterpartiesItem item = new CounterpartiesItem();
+                        item.setName(counterparties.getValue());
+                        item.setAddress(counterparties.getAddress());
+                        item.setFavorite(counterparties.getIsFavorite());
+                        counterpartiesItems.add(item);
+                    }
+
+                } finally {
+                    realm.close();
+                }
+
+                Collections.reverse(counterpartiesItems);
+
+                iLastCounterpartiesPresenter.getLastCounterparties(counterpartiesItems);
             }
+        };
+        runnable.run();
 
-            for (Counterparties counterparties : answerWithoutFavorite) {
-                CounterpartiesItem item = new CounterpartiesItem();
-                item.setName(counterparties.getValue());
-                item.setAddress(counterparties.getAddress());
-                item.setFavorite(counterparties.getIsFavorite());
-                counterpartiesItems.add(item);
-            }
-
-        } finally {
-            realm.close();
-        }
-
-        Collections.reverse(counterpartiesItems);
-
-        iLastCounterpartiesPresenter.getLastCounterparties(counterpartiesItems);
     }
 
     @Override

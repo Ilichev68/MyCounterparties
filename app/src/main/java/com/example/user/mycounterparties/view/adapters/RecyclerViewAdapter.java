@@ -7,25 +7,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.view.CounterpartiesItem;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by User on 17.11.2017.
  */
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements Filterable {
 
-    private List<CounterpartiesItem> items;
+    private ArrayList<CounterpartiesItem> items;
+    private ArrayList<CounterpartiesItem> mFilteredList;
     private Listner listner;
 
-    public RecyclerViewAdapter(List<CounterpartiesItem> items) {
+    public RecyclerViewAdapter(ArrayList<CounterpartiesItem> items) {
         this.items = items;
+        mFilteredList = items;
     }
 
     @Override
@@ -36,18 +40,56 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
-        CounterpartiesItem counterpartiesItem = items.get(position);
+        CounterpartiesItem counterpartiesItem = mFilteredList.get(position);
         holder.bindCounterparties(counterpartiesItem);
 
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return mFilteredList.size();
     }
 
     public void setListner(Listner listner) {
         this.listner = listner;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+
+                if (charString.isEmpty()) {
+
+                    mFilteredList = items;
+                } else {
+
+                    ArrayList<CounterpartiesItem> filteredList = new ArrayList<>();
+
+                    for (CounterpartiesItem counterpartiesItem : items) {
+
+                        if (counterpartiesItem.getName().toLowerCase().contains(charString) || counterpartiesItem.getAddress().toLowerCase().contains(charString)) {
+
+                            filteredList.add(counterpartiesItem);
+                        }
+                    }
+
+                    mFilteredList = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mFilteredList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mFilteredList = (ArrayList<CounterpartiesItem>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

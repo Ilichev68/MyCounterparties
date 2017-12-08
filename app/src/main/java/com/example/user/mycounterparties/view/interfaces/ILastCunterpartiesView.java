@@ -2,7 +2,7 @@ package com.example.user.mycounterparties.view.interfaces;
 
 import com.example.user.mycounterparties.view.CounterpartiesItem;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by User on 01.12.2017.
@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface ILastCunterpartiesView {
 
-    void showAllLastCounterparties(List<CounterpartiesItem> counterpartiesItems);
+    void showAllLastCounterparties(ArrayList<CounterpartiesItem> counterpartiesItems);
 }

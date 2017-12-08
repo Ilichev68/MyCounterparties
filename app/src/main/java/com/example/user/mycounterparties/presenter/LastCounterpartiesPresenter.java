@@ -11,7 +11,7 @@ import com.example.user.mycounterparties.view.activity.SearchActivity;
 import com.example.user.mycounterparties.view.interfaces.ILastCunterpartiesView;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by User on 01.12.2017.
@@ -33,7 +33,7 @@ public class LastCounterpartiesPresenter implements ILastCounterpartiesPresenter
     }
 
     @Override
-    public void getLastCounterparties(List<CounterpartiesItem> counterpartiesItems) {
+    public void getLastCounterparties(ArrayList<CounterpartiesItem> counterpartiesItems) {
         iLastCounterpartiesView.get().showAllLastCounterparties(counterpartiesItems);
     }
 

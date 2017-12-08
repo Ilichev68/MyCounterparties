@@ -14,5 +14,5 @@ public interface ICounterpartyesDetailsPresenter {
     void favoriteCheckboxChecked(boolean isFavorite, String nameAndAddress);
     void deleteCounterpartiyFromLast(String valueAndAddress);
     void shareCounterpatiyDetails();
-    void detailsForMap(GoogleMap googleMap);
+    void setDetailsForMap(GoogleMap googleMap);
 }
