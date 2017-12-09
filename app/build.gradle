@@ -35,10 +35,8 @@ dependencies {
     implementation 'io.realm:realm-android:0.87.0'
     annotationProcessor 'io.realm:realm-android:0.87.0'
     // Retrofit
-    implementation 'com.squareup.retrofit:retrofit:1.9.0'
-    implementation 'com.squareup.okhttp:okhttp:2.4.0'
-    implementation 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
-    implementation 'com.squareup.okio:okio:1.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     // Google Gson
     implementation 'com.google.code.gson:gson:2.8.1'
     testImplementation 'junit:junit:4.12'

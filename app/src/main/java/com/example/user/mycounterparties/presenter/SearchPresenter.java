@@ -1,11 +1,14 @@
 package com.example.user.mycounterparties.presenter;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.example.user.mycounterparties.model.Model;
 import com.example.user.mycounterparties.model.intrerfaces.IModel;
 import com.example.user.mycounterparties.presenter.interfaces.ISearchPresenter;
+import com.example.user.mycounterparties.view.activity.CounterpartiyActivity;
+import com.example.user.mycounterparties.view.activity.SearchActivity;
 import com.example.user.mycounterparties.view.interfaces.ISearchView;
 
 import java.lang.ref.WeakReference;
@@ -53,5 +56,10 @@ public class SearchPresenter implements ISearchPresenter {
                 }
             });
         }
+    }
+
+    @Override
+    public void startCounterpartiesDetailsActivity(Context context, String valueAndAAddess) {
+        CounterpartiyActivity.start(context, valueAndAAddess);
     }
 }

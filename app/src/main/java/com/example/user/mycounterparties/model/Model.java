@@ -22,7 +22,6 @@ import java.util.concurrent.Executors;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import retrofit.RetrofitError;
 
 /**
  * Created by User on 01.12.2017.
@@ -218,9 +217,7 @@ public class Model implements IModel {
                         try {
                             suggestion = DaDataRestClient.getInstance().suggestSync(new DaDataBody(queryFromUser, 10));
                             success = true;
-                        } catch (RetrofitError e) {
-                            e.printStackTrace();
-                            iSearchPresenter.getErrorMassege(e.getMessage());
+
                         } catch (Exception e) {
                             e.printStackTrace();
                             iSearchPresenter.getErrorMassege(e.getMessage());
@@ -290,29 +287,36 @@ public class Model implements IModel {
     }
 
     @Override
-    public void cacheMyCounterparties(Realm realm, RealmDaDataSuggestion suggestion, int i, String sb) {
-        String value = suggestion.getSuggestions().get(i).getValue();
-        String address = suggestion.getSuggestions().get(i).getRealmData().getAddress().getValue();
-        String name = suggestion.getSuggestions().get(i).getRealmData().getManagement().getName();
-        String post = suggestion.getSuggestions().get(i).getRealmData().getManagement().getPost();
-        String opf = suggestion.getSuggestions().get(i).getRealmData().getOpf().getFull();
-        String inn = suggestion.getSuggestions().get(i).getRealmData().getInn();
-        double geo_lat = suggestion.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lat();
-        double geo_lon = suggestion.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lon();
+    public void cacheMyCounterparties(final Realm realm, RealmDaDataSuggestion suggestion, int i, final String sb) {
+        final String value = suggestion.getSuggestions().get(i).getValue();
+        final String address = suggestion.getSuggestions().get(i).getRealmData().getAddress().getValue();
+        final String name = suggestion.getSuggestions().get(i).getRealmData().getManagement().getName();
+        final String post = suggestion.getSuggestions().get(i).getRealmData().getManagement().getPost();
+        final String opf = suggestion.getSuggestions().get(i).getRealmData().getOpf().getFull();
+        final String inn = suggestion.getSuggestions().get(i).getRealmData().getInn();
+        final double geo_lat = suggestion.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lat();
+        final double geo_lon = suggestion.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lon();
         realm.beginTransaction();
 
-        Counterparties counterparties = realm.createObject(Counterparties.class);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Counterparties counterparties = realm.createObject(Counterparties.class);
 
-        counterparties.setValue(value);
-        counterparties.setAddress(address);
-        counterparties.setName(name);
-        counterparties.setPost(post);
-        counterparties.setFullOpf(opf);
-        counterparties.setValueAndAddress(sb);
-        counterparties.setInn(inn);
-        counterparties.setGeo_lat(geo_lat);
-        counterparties.setGeo_lon(geo_lon);
+                counterparties.setValue(value);
+                counterparties.setAddress(address);
+                counterparties.setName(name);
+                counterparties.setPost(post);
+                counterparties.setFullOpf(opf);
+                counterparties.setValueAndAddress(sb);
+                counterparties.setInn(inn);
+                counterparties.setGeo_lat(geo_lat);
+                counterparties.setGeo_lon(geo_lon);
 
-        realm.commitTransaction();
+                realm.commitTransaction();
+            }
+        };
+        runnable.run();
+
     }
 }

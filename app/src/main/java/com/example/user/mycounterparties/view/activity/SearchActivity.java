@@ -48,7 +48,7 @@ public class SearchActivity extends AppCompatActivity implements TextWatcher, IS
         textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                CounterpartiyActivity.start(SearchActivity.this, adapter.getItem(i));
+                presenter.startCounterpartiesDetailsActivity(SearchActivity.this, adapter.getItem(i));
                 textView.setText("");
             }
         });

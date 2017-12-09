@@ -1,14 +1,19 @@
 package com.example.user.mycounterparties.model.rest;
 
-import com.example.user.mycounterparties.BuildConfig;
-import com.example.user.mycounterparties.model.realm.RealmDaDataSuggestion;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import android.support.annotation.NonNull;
 
-import retrofit.Callback;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.converter.GsonConverter;
+import com.example.user.mycounterparties.model.realm.RealmDaDataSuggestion;
+
+
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * Created by User on 02.11.2017.
@@ -23,30 +28,35 @@ public class DaDataRestClient {
     private DaDataService apiService;
 
     private DaDataRestClient() {
-        Gson gson = new GsonBuilder().create();
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
-                .setEndpoint(BASE_URL)
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        request.addHeader("Content-Type", "application/json");
-                        request.addHeader("Accept", "application/json");
-                        request.addHeader("Authorization", "Token 2be5ced07d13c83cbaa7f6770df55ad17f28c868");
-                    }
-                })
-                .setConverter(new GsonConverter(gson))
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(@NonNull Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+
+                Request request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("Accept", "application/json")
+                        .header("Authorization", "Token 2be5ced07d13c83cbaa7f6770df55ad17f28c868")
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
 
-        apiService = restAdapter.create(DaDataService.class);
+        apiService = retrofit.create(DaDataService.class);
     }
 
-    /**
-     * Get default instance of {@code DaDataRestClient}.
-     *
-     * @return an instance of DaDataRestClient.
-     */
+
     public static DaDataRestClient getInstance() {
         DaDataRestClient localInstance = instance;
         if (localInstance == null) {
@@ -60,23 +70,8 @@ public class DaDataRestClient {
         return localInstance;
     }
 
-    /**
-     * Get suggestion asynchronously.
-     *
-     * @param body     an object that need to be passed in the body of the request.
-     * @param callback a Retrofit callback.
-     */
-    public void suggestAsync(DaDataBody body, Callback<RealmDaDataSuggestion> callback) {
-        apiService.getSuggestionAsync(body, callback);
-    }
 
-    /**
-     * Get suggestion synchronously.
-     *
-     * @param body an object that need to be passed in the body of the request.
-     * @return
-     */
-    public RealmDaDataSuggestion suggestSync(DaDataBody body) {
-        return apiService.getSuggestionSync(body);
+    public RealmDaDataSuggestion suggestSync(DaDataBody body) throws IOException {
+        return apiService.getSuggestionSync(body).execute().body();
     }
 }
