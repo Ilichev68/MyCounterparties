@@ -32,6 +32,7 @@ public class Model implements IModel {
     private ILastCounterpartiesPresenter iLastCounterpartiesPresenter;
     private ICounterpartyesDetailsPresenter iCounterpartyesDetailsPresenter;
     private ISearchPresenter iSearchPresenter;
+    private RealmDaDataSuggestion suggestion1;
     private final static ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public Model(ILastCounterpartiesPresenter iLastCounterpartiesPresenter) {
@@ -170,7 +171,9 @@ public class Model implements IModel {
         } finally {
             realm.close();
         }
-        return isFavoriteCounterparties.getIsFavorite();
+        if (isFavoriteCounterparties != null)
+            return isFavoriteCounterparties.getIsFavorite();
+        else return false;
     }
 
     @Override
@@ -207,28 +210,28 @@ public class Model implements IModel {
                 if (!queryFromUser.isEmpty()) {
                     Realm realm = Realm.getDefaultInstance();
 
-                    RealmResults<Query> queryRealmResults = realm.where(Query.class).equalTo("query", queryFromUser).findAll();
+//                    RealmResults<Query> queryRealmResults = realm.where(Query.class).equalTo("query", queryFromUser).findAll();
                     final List<String> suggestions = new ArrayList<>(10);
 
                     boolean success = false;
 
-                    if (queryRealmResults.size() == 0) {
-                        RealmDaDataSuggestion suggestion = null;
-                        try {
-                            suggestion = DaDataRestClient.getInstance().suggestSync(new DaDataBody(queryFromUser, 10));
-                            success = true;
+//                    if (queryRealmResults.size() == 0) {
+                    RealmDaDataSuggestion suggestion = null;
+                    try {
+                        suggestion = DaDataRestClient.getInstance().suggestSync(new DaDataBody(queryFromUser, 10));
+                        success = true;
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            iSearchPresenter.getErrorMassege(e.getMessage());
-                        }
-
-                        if (success) {
-                            cacheUserQueryWithServerResult(queryFromUser, realm, suggestions, suggestion);
-                        }
-                    } else {
-                        fillSuggestionsFromCache(queryRealmResults, suggestions);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        iSearchPresenter.getErrorMassege(e.getMessage());
                     }
+
+                    if (success) {
+                        cacheUserQueryWithServerResult(queryFromUser, realm, suggestions, suggestion);
+                    }
+//                    } else {
+//                        fillSuggestionsFromCache(queryRealmResults, suggestions);
+//                    }
 
                     realm.close();
 
@@ -244,6 +247,7 @@ public class Model implements IModel {
     public void cacheUserQueryWithServerResult(String queryFromUser, Realm realm, List<String> suggestions, RealmDaDataSuggestion suggestion) {
         RealmList<Result> resultsRealm = new RealmList<>();
         if (suggestion != null) {
+            suggestion1 = suggestion;
             for (int i = 0; i < suggestion.getSuggestions().size(); i++) {
                 String suggestionResult = suggestion.getSuggestions().get(i).getValue();
                 String sug = suggestion.getSuggestions().get(i).getRealmData().getAddress().getValue();
@@ -253,7 +257,7 @@ public class Model implements IModel {
                         sug;
                 suggestions.add(sb);
 
-                cacheMyCounterparties(realm, suggestion, i, sb);
+//                cacheMyCounterparties(realm, suggestion, i, sb);
 
                 realm.beginTransaction();
                 Result result = realm.createObject(Result.class);
@@ -318,5 +322,42 @@ public class Model implements IModel {
         };
         runnable.run();
 
+    }
+
+    @Override
+    public void cacheClickedCounterpartiy(String valueAndAddress) {
+        if (suggestion1 != null) {
+
+            Realm realm = Realm.getDefaultInstance();
+            for (int i = 0; i < suggestion1.getSuggestions().size(); i++) {
+                if (valueAndAddress.equals(suggestion1.getSuggestions().get(i).getValue() + "," + suggestion1.getSuggestions().get(i).getRealmData().getAddress().getValue())) {
+                    final String value = suggestion1.getSuggestions().get(i).getValue();
+                    final String address = suggestion1.getSuggestions().get(i).getRealmData().getAddress().getValue();
+                    final String name = suggestion1.getSuggestions().get(i).getRealmData().getManagement().getName();
+                    final String post = suggestion1.getSuggestions().get(i).getRealmData().getManagement().getPost();
+                    final String opf = suggestion1.getSuggestions().get(i).getRealmData().getOpf().getFull();
+                    final String inn = suggestion1.getSuggestions().get(i).getRealmData().getInn();
+                    final double geo_lat = suggestion1.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lat();
+                    final double geo_lon = suggestion1.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lon();
+                    realm.beginTransaction();
+                    Counterparties counterparties = realm.createObject(Counterparties.class);
+
+                    counterparties.setValue(value);
+                    counterparties.setAddress(address);
+                    counterparties.setName(name);
+                    counterparties.setPost(post);
+                    counterparties.setFullOpf(opf);
+                    counterparties.setValueAndAddress(valueAndAddress);
+                    counterparties.setInn(inn);
+                    counterparties.setIsFavorite(false);
+                    counterparties.setGeo_lat(geo_lat);
+                    counterparties.setGeo_lon(geo_lon);
+
+                    realm.commitTransaction();
+                }
+            }
+
+            iSearchPresenter.start(valueAndAddress);
+        }
     }
 }

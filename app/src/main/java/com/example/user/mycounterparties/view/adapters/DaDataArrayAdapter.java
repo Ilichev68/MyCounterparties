@@ -31,10 +31,15 @@ public class DaDataArrayAdapter<String> extends ArrayAdapter<String> {
 
         @Override
         protected FilterResults performFiltering(CharSequence arg0) {
-            FilterResults result = new FilterResults();
-            result.values = items;
-            result.count = items.size();
-            return result;
+            if (!arg0.toString().trim().isEmpty()) {
+                final FilterResults result = new FilterResults();
+                result.values = items;
+                result.count = items.size();
+                return result;
+            } else {
+                items.clear();
+                return null;
+            }
         }
 
         @Override

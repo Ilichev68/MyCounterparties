@@ -22,6 +22,7 @@ public class SearchPresenter implements ISearchPresenter {
 
     private WeakReference<ISearchView> iSearchView;
     private IModel iMainModel;
+    private Context context;
 
     public SearchPresenter(ISearchView iSearchView){
         this.iSearchView = new WeakReference<>(iSearchView);
@@ -59,7 +60,14 @@ public class SearchPresenter implements ISearchPresenter {
     }
 
     @Override
-    public void startCounterpartiesDetailsActivity(Context context, String valueAndAAddess) {
-        CounterpartiyActivity.start(context, valueAndAAddess);
+    public void startCounterpartiesDetailsActivity(Context context, String valueAndAddress) {
+        this.context = context;
+        iMainModel.cacheClickedCounterpartiy(valueAndAddress);
+
+    }
+
+    @Override
+    public void start(String valueAndAddress) {
+        CounterpartiyActivity.start(context, valueAndAddress);
     }
 }

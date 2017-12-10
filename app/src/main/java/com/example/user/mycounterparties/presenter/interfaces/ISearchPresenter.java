@@ -14,4 +14,5 @@ public interface ISearchPresenter {
     void getErrorMassege(String error);
     void getSuggestionList(List<String> suggestion);
     void startCounterpartiesDetailsActivity(Context context, String valueAndAAddess);
+    void start(String valueAndAddress);
 }

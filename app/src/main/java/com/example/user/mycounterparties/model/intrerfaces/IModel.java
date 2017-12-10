@@ -20,6 +20,7 @@ public interface IModel {
     boolean getCounterpartiyIsFavorite(String nameAndAddress);
     void deleteCounterpartiyFromLast(String valueAndAddress);
     void sendQueryToServer(String query);
+    void cacheClickedCounterpartiy(String valueAndAddress);
     void cacheMyCounterparties(Realm realm, RealmDaDataSuggestion suggestion, int i, String sb);
     void cacheUserQueryWithServerResult(String queryFromUser, Realm realm, List<String> suggestions, RealmDaDataSuggestion suggestion);
     void fillSuggestionsFromCache(RealmResults<Query> queryRealmResults, List<String> suggestions);
