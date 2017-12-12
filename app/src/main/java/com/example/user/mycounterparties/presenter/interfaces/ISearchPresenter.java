@@ -2,6 +2,9 @@ package com.example.user.mycounterparties.presenter.interfaces;
 
 import android.content.Context;
 
+
+import com.example.user.mycounterparties.view.interfaces.ISearchView;
+
 import java.util.List;
 
 /**
@@ -10,9 +13,16 @@ import java.util.List;
 
 public interface ISearchPresenter {
 
+    void onConfigurationChanged(ISearchView view);
+
     void sendQueryToDaData(String query);
+
     void getErrorMassege(String error);
+
     void getSuggestionList(List<String> suggestion);
+
     void startCounterpartiesDetailsActivity(Context context, String valueAndAAddess);
+
     void start(String valueAndAddress);
+
 }

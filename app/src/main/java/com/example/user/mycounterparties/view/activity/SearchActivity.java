@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.user.mycounterparties.R;
 import com.example.user.mycounterparties.presenter.SearchPresenter;
 import com.example.user.mycounterparties.presenter.interfaces.ISearchPresenter;
+import com.example.user.mycounterparties.StateMaintainer;
 import com.example.user.mycounterparties.view.adapters.DaDataArrayAdapter;
 import com.example.user.mycounterparties.view.interfaces.ISearchView;
 
@@ -27,6 +28,10 @@ public class SearchActivity extends AppCompatActivity implements TextWatcher, IS
     private AutoCompleteTextView textView;
     private Toast toast;
     private ISearchPresenter presenter;
+    protected final String TAG = getClass().getSimpleName();
+    private final StateMaintainer mStateMaintainer = new StateMaintainer( this.getFragmentManager(), TAG );
+
+
 
     public static void start(Context context) {
         Intent starter = new Intent(context, SearchActivity.class);
@@ -38,18 +43,21 @@ public class SearchActivity extends AppCompatActivity implements TextWatcher, IS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        textView = findViewById(R.id.autocompletetextview_activitymain);
+
+        textView = findViewById(R.id.autocompletetextview);
         adapter = new DaDataArrayAdapter<>(this, android.R.layout.simple_list_item_1, EMPTY);
 
-        initialize(this);
+        startMVPOps();
+//        initialize(this);
 
         textView.setAdapter(adapter);
 
         textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                presenter.startCounterpartiesDetailsActivity(SearchActivity.this, adapter.getItem(i));
                 textView.setText("");
+                presenter.startCounterpartiesDetailsActivity(SearchActivity.this, adapter.getItem(i));
+
             }
         });
 
@@ -94,7 +102,36 @@ public class SearchActivity extends AppCompatActivity implements TextWatcher, IS
         adapter.notifyDataSetChanged();
     }
 
-    private void initialize(ISearchView iSearchView) {
-        presenter = new SearchPresenter(iSearchView);
+    private void initialize(ISearchView view )
+            throws InstantiationException, IllegalAccessException{
+        presenter = new SearchPresenter(view);
+        mStateMaintainer.put(ISearchPresenter.class.getSimpleName(), presenter);
     }
+
+    private void reinitialize( ISearchView view)
+            throws InstantiationException, IllegalAccessException {
+        presenter = mStateMaintainer.get( ISearchPresenter.class.getSimpleName() );
+
+        if ( presenter == null ) {
+            initialize( view );
+        } else {
+            presenter.onConfigurationChanged( view );
+        }
+    }
+
+    public void startMVPOps() {
+        try {
+            if ( mStateMaintainer.firstTimeIn() ) {
+                initialize(this);
+            } else {
+                reinitialize(this);
+            }
+        } catch ( InstantiationException | IllegalAccessException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
+//    private void initialize(ISearchView iSearchView) {
+//        presenter = new SearchPresenter(iSearchView);
+//    }
 }

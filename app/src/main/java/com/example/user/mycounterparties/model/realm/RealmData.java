@@ -35,7 +35,7 @@ public class RealmData extends RealmObject {
     }
 
     public Management getManagement() {
-        if (management!=null)return management;
+        if (management != null) return management;
         else return new Management("", "");
     }
 
@@ -68,7 +68,8 @@ public class RealmData extends RealmObject {
     }
 
     public Opf getOpf() {
-        return opf;
+        if (opf != null) return opf;
+        else return new Opf("", "", "");
     }
 
     public void setOpf(Opf opf) {
@@ -76,7 +77,8 @@ public class RealmData extends RealmObject {
     }
 
     public Name getName() {
-        return name;
+        if (name != null) return name;
+        else return new Name("", "", "", "", "");
     }
 
     public void setName(Name name) {
@@ -116,7 +118,8 @@ public class RealmData extends RealmObject {
     }
 
     public State getState() {
-        return state;
+        if (state != null) return state;
+        else return new State("", "", "", "");
     }
 
     public void setState(State state) {
@@ -132,7 +135,8 @@ public class RealmData extends RealmObject {
     }
 
     public Address getAddress() {
-        return address;
+        if (address != null) return address;
+        else return new Address("", "", new Data(0, 0));
     }
 
     public void setAddress(Address address) {

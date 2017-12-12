@@ -27,6 +27,7 @@ public class LastCounterpartiesPresenter implements ILastCounterpartiesPresenter
         this.iMainModel = new Model(this);
     }
 
+
     @Override
     public void downloadCounterpartiesFromCache() {
         iMainModel.downloadCounterparties();

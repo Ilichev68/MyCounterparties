@@ -1,6 +1,7 @@
 package com.example.user.mycounterparties.model.realm;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by User on 11.11.2017.
@@ -14,6 +15,7 @@ public class Counterparties extends RealmObject {
     private String post;
     private String fullOpf;
     private String address;
+    @PrimaryKey
     private String inn;
     private boolean isFavorite;
     private String isLast;

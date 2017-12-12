@@ -13,6 +13,16 @@ public class State extends RealmObject {
     private String registration_date;
     private String liquidation_date;
 
+    public State() {
+    }
+
+    public State(String state, String actuality_date, String registration_date, String liquidation_date) {
+        this.state = state;
+        this.actuality_date = actuality_date;
+        this.registration_date = registration_date;
+        this.liquidation_date = liquidation_date;
+    }
+
     public String getState() {
         return state;
     }

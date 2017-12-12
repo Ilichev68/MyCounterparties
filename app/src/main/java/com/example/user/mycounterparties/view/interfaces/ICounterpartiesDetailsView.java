@@ -11,5 +11,4 @@ public interface ICounterpartiesDetailsView {
     void showDialogFragmentForDelete(String valueAndAddress);
     void shareDetails(String counterpartiyDetails);
     void showMap();
-//    void showAll();
 }

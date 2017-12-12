@@ -17,7 +17,18 @@ public class Name extends RealmObject{
         @SerializedName("short")
         private String mhort;
 
-        public String getFull_with_opf() {
+    public Name() {
+    }
+
+    public Name(String full_with_opf, String short_with_opf, String latin, String full, String mhort) {
+        this.full_with_opf = full_with_opf;
+        this.short_with_opf = short_with_opf;
+        this.latin = latin;
+        this.full = full;
+        this.mhort = mhort;
+    }
+
+    public String getFull_with_opf() {
             return full_with_opf;
         }
 

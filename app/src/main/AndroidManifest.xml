@@ -26,7 +26,7 @@
         <activity
             android:name=".view.activity.CounterpartiyActivity"
             android:label=""
-            android:parentActivityName=".view.activity.MainActivity"
+            android:parentActivityName=".view.activity.SearchActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".view.activity.SearchActivity"

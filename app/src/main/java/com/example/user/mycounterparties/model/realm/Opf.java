@@ -12,6 +12,15 @@ public class Opf extends RealmObject {
     private String full;
     private String shot;
 
+    public Opf() {
+    }
+
+    public Opf(String code, String full, String shot) {
+        this.code = code;
+        this.full = full;
+        this.shot = shot;
+    }
+
     public String getCode() {
         return code;
     }

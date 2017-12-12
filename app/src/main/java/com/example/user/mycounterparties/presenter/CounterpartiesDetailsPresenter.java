@@ -89,19 +89,20 @@ public class CounterpartiesDetailsPresenter implements ICounterpartyesDetailsPre
 
     @Override
     public void setDetailsForMap(GoogleMap googleMap) {
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(geo_lat, geo_lon))
-                .title(orgName));
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(geo_lat, geo_lon))
-                .zoom(15)
-                .bearing(45)
-                .tilt(20)
-                .build();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-        googleMap.animateCamera(cameraUpdate);
-//        iCounterpartiesDetailsView.get().showAll();
+        if ((geo_lon != 0) & (geo_lat != 0)) {
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(geo_lat, geo_lon))
+                    .title(orgName));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(geo_lat, geo_lon))
+                    .zoom(15)
+                    .bearing(45)
+                    .tilt(20)
+                    .build();
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+            googleMap.animateCamera(cameraUpdate);
+        }
 
     }
 

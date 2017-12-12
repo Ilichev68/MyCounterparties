@@ -12,6 +12,15 @@ public class Address extends RealmObject {
     private String unrestricted_value;
     private Data data;
 
+    public Address() {
+    }
+
+    public Address(String value, String unrestricted_value, Data data) {
+        this.value = value;
+        this.unrestricted_value = unrestricted_value;
+        this.data = data;
+    }
+
     public String getValue() {
         return value;
     }

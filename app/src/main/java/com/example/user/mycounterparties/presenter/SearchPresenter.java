@@ -8,7 +8,6 @@ import com.example.user.mycounterparties.model.Model;
 import com.example.user.mycounterparties.model.intrerfaces.IModel;
 import com.example.user.mycounterparties.presenter.interfaces.ISearchPresenter;
 import com.example.user.mycounterparties.view.activity.CounterpartiyActivity;
-import com.example.user.mycounterparties.view.activity.SearchActivity;
 import com.example.user.mycounterparties.view.interfaces.ISearchView;
 
 import java.lang.ref.WeakReference;
@@ -69,5 +68,10 @@ public class SearchPresenter implements ISearchPresenter {
     @Override
     public void start(String valueAndAddress) {
         CounterpartiyActivity.start(context, valueAndAddress);
+    }
+
+    @Override
+    public void onConfigurationChanged(ISearchView view) {
+        iSearchView = new WeakReference<>(view);
     }
 }

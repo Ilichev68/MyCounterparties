@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     private TextView textViewIfRvEmpy;
     private ILastCounterpartiesPresenter presenter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,13 +51,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         presenter.downloadCounterpartiesFromCache();
 
-
-        recyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                
-            }
-        });
     }
 
 
@@ -95,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     private void initialize(ILastCunterpartiesView iLastCunterpartiesView) {
         presenter = new LastCounterpartiesPresenter(iLastCunterpartiesView);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

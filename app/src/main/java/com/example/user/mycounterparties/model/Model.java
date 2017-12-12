@@ -7,20 +7,16 @@ import com.example.user.mycounterparties.presenter.interfaces.ICounterpartyesDet
 import com.example.user.mycounterparties.presenter.interfaces.ILastCounterpartiesPresenter;
 import com.example.user.mycounterparties.presenter.interfaces.ISearchPresenter;
 import com.example.user.mycounterparties.model.realm.Counterparties;
-import com.example.user.mycounterparties.model.realm.Query;
 import com.example.user.mycounterparties.model.realm.RealmDaDataSuggestion;
-import com.example.user.mycounterparties.model.realm.Result;
 import com.example.user.mycounterparties.view.CounterpartiesItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
@@ -32,7 +28,9 @@ public class Model implements IModel {
     private ILastCounterpartiesPresenter iLastCounterpartiesPresenter;
     private ICounterpartyesDetailsPresenter iCounterpartyesDetailsPresenter;
     private ISearchPresenter iSearchPresenter;
-    private RealmDaDataSuggestion suggestion1;
+    private RealmDaDataSuggestion suggestionsWhenUserClicked;
+    private RealmDaDataSuggestion suggestion;
+    private String clickedSuggestion;
     private final static ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public Model(ILastCounterpartiesPresenter iLastCounterpartiesPresenter) {
@@ -106,7 +104,8 @@ public class Model implements IModel {
                     realm.beginTransaction();
 
                     Counterparties counterparties = realm.where(Counterparties.class).equalTo("valueAndAddress", nameAndAddress).findFirst();
-                    counterparties.setIsFavorite(isFavorite);
+                    if (counterparties != null)
+                        counterparties.setIsFavorite(isFavorite);
                     realm.commitTransaction();
                 } finally {
                     realm.close();
@@ -189,8 +188,10 @@ public class Model implements IModel {
 
                     realm.beginTransaction();
 
-                    counterparties.setIsLast("");
-                    counterparties.setIsFavorite(false);
+                    if (counterparties != null) {
+                        counterparties.setIsLast("");
+                        counterparties.setIsFavorite(false);
+                    }
 
                     realm.commitTransaction();
                 } finally {
@@ -207,16 +208,14 @@ public class Model implements IModel {
             @Override
             public void run() {
                 String queryFromUser = query.replaceAll("\\s+", " ").trim();
-                if (!queryFromUser.isEmpty()) {
+                if (!queryFromUser.isEmpty() & !queryFromUser.equals(clickedSuggestion)) {
+                    if (clickedSuggestion != null) clickedSuggestion = null;
                     Realm realm = Realm.getDefaultInstance();
 
-//                    RealmResults<Query> queryRealmResults = realm.where(Query.class).equalTo("query", queryFromUser).findAll();
                     final List<String> suggestions = new ArrayList<>(10);
 
                     boolean success = false;
 
-//                    if (queryRealmResults.size() == 0) {
-                    RealmDaDataSuggestion suggestion = null;
                     try {
                         suggestion = DaDataRestClient.getInstance().suggestSync(new DaDataBody(queryFromUser, 10));
                         success = true;
@@ -229,9 +228,6 @@ public class Model implements IModel {
                     if (success) {
                         cacheUserQueryWithServerResult(queryFromUser, realm, suggestions, suggestion);
                     }
-//                    } else {
-//                        fillSuggestionsFromCache(queryRealmResults, suggestions);
-//                    }
 
                     realm.close();
 
@@ -245,9 +241,9 @@ public class Model implements IModel {
 
     @Override
     public void cacheUserQueryWithServerResult(String queryFromUser, Realm realm, List<String> suggestions, RealmDaDataSuggestion suggestion) {
-        RealmList<Result> resultsRealm = new RealmList<>();
         if (suggestion != null) {
-            suggestion1 = suggestion;
+            if (suggestion.getSuggestions().size() != 0)
+                suggestionsWhenUserClicked = suggestion;
             for (int i = 0; i < suggestion.getSuggestions().size(); i++) {
                 String suggestionResult = suggestion.getSuggestions().get(i).getValue();
                 String sug = suggestion.getSuggestions().get(i).getRealmData().getAddress().getValue();
@@ -256,108 +252,45 @@ public class Model implements IModel {
                         "," +
                         sug;
                 suggestions.add(sb);
-
-//                cacheMyCounterparties(realm, suggestion, i, sb);
-
-                realm.beginTransaction();
-                Result result = realm.createObject(Result.class);
-                result.setResult(sb);
-                resultsRealm.add(result);
-                realm.commitTransaction();
-            }
-
-            realm.beginTransaction();
-            Query query = realm.createObject(Query.class);
-
-            query.setId(UUID.randomUUID().toString());
-            query.setQuery(queryFromUser);
-            query.setResult(resultsRealm);
-            realm.commitTransaction();
-
-
-        }
-    }
-
-    @Override
-    public void fillSuggestionsFromCache(RealmResults<Query> queryRealmResults, List<String> suggestions) {
-
-        for (int i = 0; i < queryRealmResults.size(); i++) {
-            RealmList<Result> result = queryRealmResults.get(i).getResult();
-
-            for (int j = 0; j < result.size(); j++) {
-                suggestions.add(result.get(j).getResult());
             }
         }
-    }
-
-    @Override
-    public void cacheMyCounterparties(final Realm realm, RealmDaDataSuggestion suggestion, int i, final String sb) {
-        final String value = suggestion.getSuggestions().get(i).getValue();
-        final String address = suggestion.getSuggestions().get(i).getRealmData().getAddress().getValue();
-        final String name = suggestion.getSuggestions().get(i).getRealmData().getManagement().getName();
-        final String post = suggestion.getSuggestions().get(i).getRealmData().getManagement().getPost();
-        final String opf = suggestion.getSuggestions().get(i).getRealmData().getOpf().getFull();
-        final String inn = suggestion.getSuggestions().get(i).getRealmData().getInn();
-        final double geo_lat = suggestion.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lat();
-        final double geo_lon = suggestion.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lon();
-        realm.beginTransaction();
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Counterparties counterparties = realm.createObject(Counterparties.class);
-
-                counterparties.setValue(value);
-                counterparties.setAddress(address);
-                counterparties.setName(name);
-                counterparties.setPost(post);
-                counterparties.setFullOpf(opf);
-                counterparties.setValueAndAddress(sb);
-                counterparties.setInn(inn);
-                counterparties.setGeo_lat(geo_lat);
-                counterparties.setGeo_lon(geo_lon);
-
-                realm.commitTransaction();
-            }
-        };
-        runnable.run();
-
     }
 
     @Override
     public void cacheClickedCounterpartiy(String valueAndAddress) {
-        if (suggestion1 != null) {
-
+        clickedSuggestion = valueAndAddress;
+        if (suggestionsWhenUserClicked != null) {
             Realm realm = Realm.getDefaultInstance();
-            for (int i = 0; i < suggestion1.getSuggestions().size(); i++) {
-                if (valueAndAddress.equals(suggestion1.getSuggestions().get(i).getValue() + "," + suggestion1.getSuggestions().get(i).getRealmData().getAddress().getValue())) {
-                    final String value = suggestion1.getSuggestions().get(i).getValue();
-                    final String address = suggestion1.getSuggestions().get(i).getRealmData().getAddress().getValue();
-                    final String name = suggestion1.getSuggestions().get(i).getRealmData().getManagement().getName();
-                    final String post = suggestion1.getSuggestions().get(i).getRealmData().getManagement().getPost();
-                    final String opf = suggestion1.getSuggestions().get(i).getRealmData().getOpf().getFull();
-                    final String inn = suggestion1.getSuggestions().get(i).getRealmData().getInn();
-                    final double geo_lat = suggestion1.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lat();
-                    final double geo_lon = suggestion1.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lon();
-                    realm.beginTransaction();
-                    Counterparties counterparties = realm.createObject(Counterparties.class);
+            for (int i = 0; i < suggestionsWhenUserClicked.getSuggestions().size(); i++) {
+                if (valueAndAddress.equals(suggestionsWhenUserClicked.getSuggestions().get(i).getValue() + "," + suggestionsWhenUserClicked.getSuggestions().get(i).getRealmData().getAddress().getValue())) {
+                    try {
+                        realm.beginTransaction();
 
-                    counterparties.setValue(value);
-                    counterparties.setAddress(address);
-                    counterparties.setName(name);
-                    counterparties.setPost(post);
-                    counterparties.setFullOpf(opf);
-                    counterparties.setValueAndAddress(valueAndAddress);
-                    counterparties.setInn(inn);
-                    counterparties.setIsFavorite(false);
-                    counterparties.setGeo_lat(geo_lat);
-                    counterparties.setGeo_lon(geo_lon);
+                        Counterparties cachedCounterparties = realm.where(Counterparties.class).equalTo("valueAndAddress", valueAndAddress).findFirst();
 
-                    realm.commitTransaction();
+                        Counterparties counterparties = new Counterparties();
+
+                        counterparties.setValue(suggestionsWhenUserClicked.getSuggestions().get(i).getValue());
+                        counterparties.setAddress(suggestionsWhenUserClicked.getSuggestions().get(i).getRealmData().getAddress().getValue());
+                        counterparties.setName(suggestionsWhenUserClicked.getSuggestions().get(i).getRealmData().getManagement().getName());
+                        counterparties.setPost(suggestionsWhenUserClicked.getSuggestions().get(i).getRealmData().getManagement().getPost());
+                        counterparties.setFullOpf(suggestionsWhenUserClicked.getSuggestions().get(i).getRealmData().getOpf().getFull());
+                        counterparties.setValueAndAddress(valueAndAddress);
+                        counterparties.setInn(suggestionsWhenUserClicked.getSuggestions().get(i).getRealmData().getInn());
+                        if (cachedCounterparties != null) {
+                            counterparties.setIsFavorite(cachedCounterparties.getIsFavorite());
+                        } else counterparties.setIsFavorite(false);
+                        counterparties.setGeo_lat(suggestionsWhenUserClicked.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lat());
+                        counterparties.setGeo_lon(suggestionsWhenUserClicked.getSuggestions().get(i).getRealmData().getAddress().getData().getGeo_lon());
+
+                        realm.copyToRealmOrUpdate(counterparties);
+                        realm.commitTransaction();
+                    } finally {
+                        realm.close();
+                    }
+                    iSearchPresenter.start(valueAndAddress);
                 }
             }
-
-            iSearchPresenter.start(valueAndAddress);
         }
     }
 }
