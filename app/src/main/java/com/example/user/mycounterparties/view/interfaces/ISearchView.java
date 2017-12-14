@@ -9,5 +9,6 @@ import java.util.List;
 public interface ISearchView {
 
     void showError(String rerror);
+
     void showSuggestions(List<String> suggestions);
 }

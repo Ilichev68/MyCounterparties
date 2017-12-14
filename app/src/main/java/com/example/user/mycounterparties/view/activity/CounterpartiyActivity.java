@@ -47,7 +47,7 @@ public class CounterpartiyActivity extends AppCompatActivity implements ICounter
 
         initialize(this);
 
-        valueAndAddress = (String) getIntent().getExtras().get("text");
+//        valueAndAddress = (String) getIntent().getExtras().get("text");
 
 
         orgName = findViewById(R.id.text);

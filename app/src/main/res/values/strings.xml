@@ -17,4 +17,5 @@
     <string name="share">share</string>
     <string name="text_if_rv_empty">Вы пока не добавили ни одного контрагента в свой список.</string>
     <string name="action_search">Search</string>
+    <string name="search">Search</string>
 </resources>

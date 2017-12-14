@@ -19,8 +19,9 @@ public class StateMaintainer {
 
     /**
      * Constructor
-     * @param fragmentManager       FragmentManager reference
-     * @param stateMaintainerTAG    the TAG used to insert the state maintainer fragment
+     *
+     * @param fragmentManager    FragmentManager reference
+     * @param stateMaintainerTAG the TAG used to insert the state maintainer fragment
      */
     public StateMaintainer(FragmentManager fragmentManager, String stateMaintainerTAG) {
         mFragmentManager = new WeakReference<>(fragmentManager);
@@ -29,8 +30,9 @@ public class StateMaintainer {
 
     /**
      * Create the state maintainer fragment
-     * @return  true: the frag was created for the first time
-     *          false: recovering the object
+     *
+     * @return true: the frag was created for the first time
+     * false: recovering the object
      */
     public boolean firstTimeIn() {
         try {
@@ -53,8 +55,9 @@ public class StateMaintainer {
 
     /**
      * Insert Object to be preserved during configuration change
-     * @param key   Object's TAG reference
-     * @param obj   Object to maintain
+     *
+     * @param key Object's TAG reference
+     * @param obj Object to maintain
      */
     public void put(String key, Object obj) {
         mStateMaintainerFrag.put(key, obj);
@@ -64,7 +67,8 @@ public class StateMaintainer {
      * Insert Object to be preserved during configuration change
      * Uses the Object's class name as a TAG reference
      * Should only be used one time by type class
-     * @param obj   Object to maintain
+     *
+     * @param obj Object to maintain
      */
     public void put(Object obj) {
         put(obj.getClass().getName(), obj);
@@ -73,19 +77,21 @@ public class StateMaintainer {
 
     /**
      * Recovers saved object
-     * @param key   TAG reference
-     * @param <T>   Class type
-     * @return      Objects
+     *
+     * @param key TAG reference
+     * @param <T> Class type
+     * @return Objects
      */
     @SuppressWarnings("unchecked")
-    public <T> T get(String key)  {
+    public <T> T get(String key) {
         return mStateMaintainerFrag.get(key);
 
     }
 
     /**
      * Verify the object existence
-     * @param key   Obj TAG
+     *
+     * @param key Obj TAG
      */
     public boolean hasKey(String key) {
         return mStateMaintainerFrag.get(key) != null;
@@ -107,8 +113,9 @@ public class StateMaintainer {
 
         /**
          * Insert objects
-         * @param key   reference TAG
-         * @param obj   Object to save
+         *
+         * @param key reference TAG
+         * @param obj Object to save
          */
         public void put(String key, Object obj) {
             mData.put(key, obj);
@@ -116,7 +123,8 @@ public class StateMaintainer {
 
         /**
          * Insert obj using class name as TAG
-         * @param object    obj to save
+         *
+         * @param object obj to save
          */
         public void put(Object object) {
             put(object.getClass().getName(), object);
@@ -124,9 +132,10 @@ public class StateMaintainer {
 
         /**
          * Recover obj
-         * @param key   reference TAG
-         * @param <T>   Class
-         * @return      Obj saved
+         *
+         * @param key reference TAG
+         * @param <T> Class
+         * @return Obj saved
          */
         @SuppressWarnings("unchecked")
         public <T> T get(String key) {

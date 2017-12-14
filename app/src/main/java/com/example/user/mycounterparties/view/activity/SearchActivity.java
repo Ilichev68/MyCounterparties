@@ -48,7 +48,6 @@ public class SearchActivity extends AppCompatActivity implements TextWatcher, IS
         adapter = new DaDataArrayAdapter<>(this, android.R.layout.simple_list_item_1, EMPTY);
 
         startMVPOps();
-//        initialize(this);
 
         textView.setAdapter(adapter);
 
@@ -131,7 +130,4 @@ public class SearchActivity extends AppCompatActivity implements TextWatcher, IS
         }
     }
 
-//    private void initialize(ISearchView iSearchView) {
-//        presenter = new SearchPresenter(iSearchView);
-//    }
 }
